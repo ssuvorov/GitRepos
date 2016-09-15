@@ -1,21 +1,56 @@
+import git from '../middleware/api'
+
 export const CHANGE_USERNAME = 'CHANGE_USERNAME'
-export const GET_REPOSITORIES = 'GET_REPOSITORIES'
-export const SHOW_SPINNER = 'SHOW_SPINNER'
+export const CLEAR_ALL = 'CLEAR_ALL'
+
+export const REPO_REQUEST = 'REPO_REQUEST'
+export const REPO_SUCCESS = 'REPO_SUCCESS'
+export const REPO_FAILURE = 'REPO_FAILURE'
 
 export const changeUsername = (username) => {
   return {
     type: CHANGE_USERNAME,
-    'username': username
+    username
   }
-  // payload: { username }
 }
 
-export const showSpinner = () => ({
-  type: SHOW_SPINNER,
-  payload: {}
-})
+export const clearAll = () => {
+  return {
+    type: CLEAR_ALL
+  }
+}
 
-export const getRepositories = () => ({
-  type: GET_REPOSITORIES,
-  payload: {}
-})
+const receiveError = (error) => {
+  return {
+    type: REPO_FAILURE,
+    error
+  }
+}
+
+const receiveRepos = (data) => {
+  return {
+    type: REPO_SUCCESS,
+    data: {
+      total: data.length,
+      items: data
+    }
+  }
+}
+
+// Relies on Redux Thunk middleware.
+export function getRepositories(username) {
+  return dispatch => {
+    dispatch({
+      type: REPO_REQUEST
+    })
+
+    git.getRepos(`users/${username}/repos`).then(
+      data => {
+        dispatch(receiveRepos(data))
+      },
+      error => {
+        dispatch(receiveError(error))
+      }
+    )
+  }
+}

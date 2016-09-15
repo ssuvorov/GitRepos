@@ -1,24 +1,41 @@
 import {
   CHANGE_USERNAME,
-  GET_REPOSITORIES,
-  SHOW_SPINNER
+  CLEAR_ALL,
+  REPO_REQUEST,
+  REPO_SUCCESS,
+  REPO_FAILURE
 } from '../actions'
 
 const initialState = {
-  username: '',
-  data: []
+  data: {},
+  fetching: false,
+  username: ''
 }
 
 export default (state = initialState, action) => {
   const updateState = {
     [CHANGE_USERNAME]: ({ username }) => (
-      Object.assign({}, state, {'username': username})
+      Object.assign(
+        {}, initialState, { username }
+      )
     ),
-    [GET_REPOSITORIES]: () => (
-      Object.assign({}, state, { spinner: true })
+    [CLEAR_ALL]: () => ( 
+      initialState
     ),
-    [SHOW_SPINNER]: () => (
-      Object.assign({}, state, { spinner: true })
+    [REPO_REQUEST]: () => (
+      Object.assign(
+        {}, state, { fetching: true, error: '' }
+      )
+    ),
+    [REPO_SUCCESS]: ({ data }) => (
+      Object.assign(
+        {}, state, { data }, { fetching: false }
+      )
+    ),
+    [REPO_FAILURE]: ({ error }) => (
+      Object.assign(
+        {}, state, { fetching: false, error: error.message }
+      )
     )
   }[action.type]
 

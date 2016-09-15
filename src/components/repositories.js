@@ -1,29 +1,41 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
-const Repositories = ({ repositories }) => {
-  const renderItems = () => {
-    if (!repositories.length) { return }
+import Loader from './loader'
+
+const Repositories = ({ fetching, repositories }) => {
+  const renderRepos = () => {
+    if (!Object.keys(repositories).length) return (<div>Type username and pres "Go!" to get results</div>)
+
+    if (!repositories.total) { return <div>No repos</div> }
 
     return (
-      <ul className="repositories">
+      <ul className="repositories__list">
         {
-          repositories.map((item) =>
-            <li className="repositories__item" key={item.id}>{ item.name }</li>)
+          repositories.items.map(item =>
+            <li className="repositories__item" key={item.id}>
+              <h3>{ item.name }</h3>
+              <p>{ item.description }</p>
+            </li>)
         }
       </ul>
     )
   }
 
   return (
-    <div>
-      <h2>Type your <strong>username</strong> to see repositories...</h2>
-      { renderItems() }
+    <div className="repositories">
+      {
+        fetching ? <Loader /> : renderRepos()
+      }
     </div>
-  );
+  )
 }
 
 Repositories.propTypes = {
-  repositories: PropTypes.array.isRequired
+  fetching: PropTypes.bool.isRequired,
+  repositories: PropTypes.shape({
+    total: PropTypes.number,
+    items: PropTypes.array
+  }).isRequired
 }
 
 export default Repositories
