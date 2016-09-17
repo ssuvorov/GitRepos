@@ -154,3 +154,17 @@ p {
 .error {
   color: #ff0f00;
 }
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px) {
+  .wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .search {
+    min-width: 100%;
+    width: 100%;
+  }
+}
