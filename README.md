@@ -1,9 +1,4 @@
->## Go Euro test
-
->Show list user's repositories
-
-
-[React] Git user's repositories list
+Git user's repositories list on React + Redux
 ===================================
 
 ### Usage
